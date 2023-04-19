@@ -40,19 +40,20 @@ public final class WeChatRobotSender {
     }
 
     private AlertResult sendMsg(String title, String content) {
+        String res = "success";
         String msg = generateMsg(title, content);
         HttpPost httpPost = constructHttpPost(url, msg);
 
         try (CloseableHttpClient httpClient = getDefaultClient()) {
             CloseableHttpResponse response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
-            String res = EntityUtils.toString(entity, StandardCharsets.UTF_8);
+            res = EntityUtils.toString(entity, StandardCharsets.UTF_8);
             EntityUtils.consume(entity);
             response.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return new AlertResult("true", "success");
+        return new AlertResult("true", res);
     }
 
     private static CloseableHttpClient getDefaultClient() {
