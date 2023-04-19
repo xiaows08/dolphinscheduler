@@ -31,6 +31,7 @@ public final class WeChatRobotSender {
     public AlertResult sendGroupChatMsg(String title, String content) {
         AlertResult alertResult;
         try {
+            // todo add response deal
             return sendMsg(title, content);
         } catch (Exception e) {
             log.info("send WeChat Group alert msg exception: {}", e.getMessage());
