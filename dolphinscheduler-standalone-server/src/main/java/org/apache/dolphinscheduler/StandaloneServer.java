@@ -40,8 +40,8 @@ public class StandaloneServer implements ApplicationListener<ApplicationEvent> {
     private static TestingServer zookeeperServer;
 
     public static void main(String[] args) throws Exception {
-        zookeeperServer = new TestingServer(true);
-        System.setProperty("registry.zookeeper.connect-string", zookeeperServer.getConnectString());
+        // zookeeperServer = new TestingServer(true);
+        // System.setProperty("registry.zookeeper.connect-string", zookeeperServer.getConnectString());
         SpringApplication.run(StandaloneServer.class, args);
     }
 
