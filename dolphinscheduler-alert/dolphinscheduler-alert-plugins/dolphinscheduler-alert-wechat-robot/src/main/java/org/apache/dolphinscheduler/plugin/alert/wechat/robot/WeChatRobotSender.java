@@ -1,9 +1,9 @@
 package org.apache.dolphinscheduler.plugin.alert.wechat.robot;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.dolphinscheduler.alert.api.AlertResult;
 import org.apache.dolphinscheduler.common.utils.JSONUtils;
-
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -18,8 +18,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public final class WeChatRobotSender {
@@ -69,33 +67,35 @@ public final class WeChatRobotSender {
         Map<String, Object> map = new HashMap<>();
         map.put("msgtype", msgType);
         Map<String, String> text = new HashMap<>();
-        // 拼接markdown文本 String.join("\n", title, content)
         text.put("content", markdown(title, content));
         map.put(msgType, text);
         return JSONUtils.toJsonString(map);
     }
 
     private String markdown(String title, String content) {
+        StringBuilder contents = new StringBuilder(100).append(String.format("** %s **%n", title));
         if (StringUtils.isNotEmpty(content)) {
+            // System.out.println("===> " + content);
             List<LinkedHashMap> maps = JSONUtils.toList(content, LinkedHashMap.class);
-            if (null == maps || maps.isEmpty()) {
-                log.error("content is null");
-                throw new RuntimeException("content map is null");
+            if (maps.isEmpty()) {
+                log.error("content convert to maps field!");
+                map2markdown(contents, JSONUtils.toMap(content, String.class, Object.class));
             }
-            StringBuilder contents = new StringBuilder(100);
-            contents.append(String.format("** %s **%n", title));
             for (LinkedHashMap<String, Object> map : maps) {
-                for (Map.Entry<String, Object> entry : map.entrySet()) {
-                    contents.append("> ")
-                            .append(entry.getKey())
-                            .append(": ")
-                            .append(entry.getValue())
-                            .append("\n");
-                }
+                map2markdown(contents, map);
                 contents.append("\n");
             }
-            return contents.toString();
         }
-        return null;
+        return contents.toString();
+    }
+
+    private static void map2markdown(StringBuilder contents, Map<String, Object> map) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            contents.append("> ")
+                    .append(entry.getKey())
+                    .append(": ")
+                    .append(entry.getValue())
+                    .append("\n");
+        }
     }
 }

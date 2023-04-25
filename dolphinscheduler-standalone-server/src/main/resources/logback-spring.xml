@@ -79,7 +79,7 @@
             </then>
         </if>
         <!--<appender-ref ref="STANDALONELOGFILE"/>-->
-        <!--<appender-ref ref="TASKLOGFILE"/>-->
+        <appender-ref ref="TASKLOGFILE"/>
         <appender-ref ref="STDOUT"/>
     </root>
 

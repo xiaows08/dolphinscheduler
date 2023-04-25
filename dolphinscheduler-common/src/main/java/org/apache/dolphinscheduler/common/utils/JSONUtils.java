@@ -186,7 +186,7 @@ public class JSONUtils {
             CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clazz);
             return objectMapper.readValue(json, listType);
         } catch (Exception e) {
-            logger.error("parse list exception!", e);
+            logger.error("parse list exception!", e.getMessage());
         }
 
         return Collections.emptyList();
